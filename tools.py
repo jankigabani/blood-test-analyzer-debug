@@ -102,29 +102,6 @@ class BloodTestReportTool(BaseTool):
         # In a real async implementation, you'd use async PDF loading
         return self._run(path)
 
-# ## Creating Nutrition Analysis Tool
-# class NutritionTool:
-#     async def analyze_nutrition_tool(blood_report_data):
-#         # Process and analyze the blood report data
-#         processed_data = blood_report_data
-        
-#         # Clean up the data format
-#         i = 0
-#         while i < len(processed_data):
-#             if processed_data[i:i+2] == "  ":  # Remove double spaces
-#                 processed_data = processed_data[:i] + processed_data[i+1:]
-#             else:
-#                 i += 1
-                
-#         # TODO: Implement nutrition analysis logic here
-#         return "Nutrition analysis functionality to be implemented"
-
-# ## Creating Exercise Planning Tool
-# class ExerciseTool:
-#     async def create_exercise_plan_tool(blood_report_data):        
-#         # TODO: Implement exercise planning logic here
-#         return "Exercise planning functionality to be implemented"
-
 class NutritionToolSchema(BaseModel):
     """Input for NutritionTool."""
     blood_report_data: str = Field(..., description="Blood report data to analyze for nutrition")
