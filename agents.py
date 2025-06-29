@@ -9,7 +9,8 @@ from crewai import Agent, LLM
 from tools import search_tool, BloodTestReportTool
 
 ### Loading LLM
-llm=LLM(model="ollama/llama3.1", base_url="http://localhost:11434")
+# llm=LLM(model="ollama/llama3.1", base_url="http://localhost:11434")
+llm=LLM(model="ollama/llama3.1", base_url="http://host.docker.internal:11434")
 
 blood_test_tool = BloodTestReportTool()
 
