@@ -1,54 +1,18 @@
 # Project Setup and Execution Guide
-```sh
-git clone git@github.com:Ronit33/blood-test-analyser.git
-```
+
 ## Getting Started
 
-### 1. Create a Virtual Environment
-
-To begin, we will create a Conda environment. Open your terminal and run:
-```sh
-conda create -n wingify_assignment python=3.10 -y
-```
-
-### 2. Install Required Libraries
-After creating the environment, activate it and install the necessary libraries by running:
-
+### Install Required Libraries
 ```sh
 pip install -r requirements.txt
-
 ```
 
-### 3. Set Up Environment Variables
-While the libraries are installing, we need to set up our environment variables.
+# You're All Not Set!
+🐛 **Debug Mode Activated!** The project has bugs waiting to be squashed - your mission is to fix them and bring it to life.
 
-Create a ```.env``` File
-In the project directory, create a new file named ``.env`` Add your environment variables to this file in the following format:
+## Debugging Instructions
 
-```env
-GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
-SERPER_API_KEY="YOUR_SERPER_API_KEY"
-```
-
-* Obtain API Keys
-    - Google API Key: Obtain your API key from [Google API Key](https://aistudio.google.com/app/apikey).
-    - Serper API Key: Obtain your API key from [Serper API Key](https://serper.dev/api-key).
-
-### 4. Start the Project
-Now that we have everything set up, let's start the project.
-
-### Open the Folder
-Open the folder named: ``blood test analyser``
-
-### Running the Project
-To run the project, follow these steps:
-
-1. Open your terminal.
-2. Navigate to the project directory.
-3. Execute the following command:
-```sh
-streamlit run main.py
-```
-
-# You're All Set!
-Congratulations! The project should now be up and running.
+1. **Identify the Bug**: Carefully read the code and understand the expected behavior.
+2. **Fix the Bug**: Implement the necessary changes to fix the bug.
+3. **Test the Fix**: Run the project and verify that the bug is resolved.
+4. **Repeat**: Continue this process until all bugs are fixed.

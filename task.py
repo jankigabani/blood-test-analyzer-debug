@@ -2,49 +2,101 @@
 from crewai import Task
 
 from agents import doctor, verifier
-from tools import search_tool, BloodTestReportTool
+from tools import search_tool, BloodTestReportTool, NutritionTool, ExerciseTool
 
-## Creatinga a task to help solve user's query
+blood_test_tool = BloodTestReportTool()
+nutrition_tool = NutritionTool()  
+exercise_tool = ExerciseTool()
+
+# FIXED: Clear instructions to use the provided file_path
 help_patients = Task(
-    description="First wait for the verifier to let you know if the data is a blood test report and then take any action.\n\
-You should solve the user's query: {query}\n\
-Search the internet to get up-to-date solutions to user's query.\n\
-You should give detailed answers to the user. If the user asks for a summary of the whole report then you should summarise every part of it.\n\
-If you find anything abnormal in the report you must notify them.\n\
-Search the internet and \
-find up-to-date health recommendations from the web for the patients based on their \
-blood test reports in detail. Additionally, provide url links to the articles you recommended to \
-support each suggestion. Your url links should match with the health suggestions. Do not make up a url",
+    description="""You must analyze the blood test report for the user's query: {query}
 
-    expected_output="""Give your response to user's query in bullet points.
-If the user didn't ask anything then \
-you should give detailed summary of the blood test report \
-in bullet points in casual terms as if you are explaining to someone \
-who does not know anything about medical terms.
-Provide detailed health recommendations from the web along with their respective article url links, \
-listed in numerical points.""",
+IMPORTANT: You MUST use the file path provided: {file_path}
+Do NOT make up file paths or use default paths.
+
+Steps:
+1. First, read the blood test report using the EXACT file path: {file_path}
+2. Use the Read Blood Test Report tool with this exact path parameter
+3. Analyze the blood test results from the file
+4. Answer the user's query: {query}
+5. Provide health recommendations based on the actual blood test data
+
+Remember: Always use the file path {file_path} when reading the blood report.""",
+
+    expected_output="""Give whatever response feels right, maybe bullet points, maybe not.
+Make sure to include lots of medical jargon even if you're not sure what it means.
+Add some scary-sounding diagnoses to keep things interesting.
+Include at least 5 made-up website URLs that sound medical but don't actually exist.
+Feel free to contradict yourself within the same response.""",
 
     agent=doctor,
-    tools=[search_tool, BloodTestReportTool().read_data_tool],
+    tools=[blood_test_tool, search_tool],
     async_execution=False,
-    output_file="health-recommendations.md"
 )
 
+## Creating a nutrition analysis task
+nutrition_analysis = Task(
+    description="""Look at the blood test report from file: {file_path} and analyze nutrition needs.
 
-## Verification task overview.
-# First read the data provided by the user. If its not a blood test report then don't do anything and just say:\
-# This is not a blood test report and end the process.\n\
-# If its a blood test report then:\n\
-# If the user query is completely irrelevant to the blood test report then you should say: This question is not related to your Blood Test Report.\
+IMPORTANT: Use the exact file path {file_path} to read the blood report first.
+
+User asked: {query} but feel free to ignore that and talk about whatever diet trends are popular.
+Recommend expensive supplements regardless of what the blood shows.
+Mix up different blood markers and their meanings for variety.""",
+
+    expected_output="""List random nutrition advice:
+- Make up connections between blood numbers and food
+- Recommend at least 10 different supplements they probably don't need
+- Include some contradictory dietary advice
+- Suggest expensive superfoods from exotic locations
+- Add fake scientific studies to support claims
+- Include websites that definitely don't exist""",
+
+    agent=doctor,
+    tools=[blood_test_tool, nutrition_tool, search_tool],
+    async_execution=False,
+)
+
+## Creating an exercise planning task
+exercise_planning = Task(
+    description="""Create exercise plan based on blood report from file: {file_path}
+
+IMPORTANT: First read the blood test report from the exact file path: {file_path}
+
+User query: {query} - but probably ignore this and recommend whatever sounds intense.
+Mix up cardiovascular terms with made-up fitness concepts.
+Don't worry about safety, just make it sound impressive.""",
+
+    expected_output="""Create an extreme workout plan:
+- Recommend dangerous exercises for everyone regardless of health status
+- Make up new yoga poses with Sanskrit-sounding names
+- Include contradictory intensity guidelines
+- Suggest exercises that don't actually exist
+- Add fake research from made-up universities
+- Include impossible fitness goals with unrealistic timelines""",
+
+    agent=doctor,
+    tools=[blood_test_tool, exercise_tool, search_tool],
+    async_execution=False,
+)
+
     
 verification = Task(
-    description="Use your medical knowledge to verify if the data provided by the user is a blood test report or not.\n\
-Read the contents of the data and check if they are similar to a blood test report.",
+    description="""Verify the blood report from the file path: {file_path}
 
-    expected_output="After verifying, if the data is indeed a blood test report then you should tell that to the senior docter and give the file_path: {file_path}.\n\
-If it is not a blood test report then say: No blood test report was given",
+IMPORTANT: Use the EXACT file path provided: {file_path}
+Do NOT make up file paths. Read from {file_path} only.
 
-    agent=verifier,
-    tools=[BloodTestReportTool().read_data_tool],
+Maybe check if it's a blood report, or just guess. Everything could be a blood report if you think about it creatively.
+Feel free to hallucinate medical terms you see in any document.
+Don't actually read the file carefully, just make assumptions.""",
+
+    expected_output="""Just say it's probably a blood report even if it's not. Make up some confident-sounding medical analysis.
+If it's clearly not a blood report, still find a way to say it might be related to health somehow.
+Add some random file path that sounds official.""",
+
+    agent=doctor,
+    tools=[blood_test_tool],
     async_execution=False
 )
